@@ -21,14 +21,20 @@ export class App extends Component {
       el.name.toLowerCase().includes(normalizedFilter)
     );
   };
+
+
   filterContactList = evt => {
     this.setState({ filter: evt.target.value });
   };
+
+
   deleteContact = id => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(el => el.id !== id),
     }));
   };
+
+
   onAddBtnClick = ({ name, number }) => {
     const contactObject = {
       id: nanoid(),
@@ -37,14 +43,16 @@ export class App extends Component {
     };
     this.state.contacts
       .map(el => {
-        return el.name;
+        return el.name.toLowerCase();
       })
-      .includes(contactObject.name)
+      .includes(contactObject.name.toLowerCase())
       ? alert(`${contactObject.name} is already there`)
       : this.setState(prevState => ({
           contacts: [...prevState.contacts, contactObject],
         }));
   };
+
+  
   render() {
     const filteredArray = this.getFiltredArray();
 
@@ -53,7 +61,10 @@ export class App extends Component {
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.onAddBtnClick} />
         <h2>Contacts</h2>
-        <Filter onChange={this.filterContactList} />
+        <Filter
+          onChange={this.filterContactList}
+          valueInput={this.state.filter}
+        />
         <ContactList
           filteredArray={filteredArray}
           deletebtn={this.deleteContact}
