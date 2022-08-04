@@ -14,7 +14,18 @@ export class App extends Component {
     ],
     filter: '',
   };
-
+  componentDidMount() {
+    const prevValues = JSON.parse(localStorage.getItem('contacts'));
+    console.log(prevValues);
+    if (prevValues) {
+      this.setState({ contacts: prevValues });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
   getFiltredArray = () => {
     const normalizedFilter = this.state.filter.toLowerCase();
     return this.state.contacts.filter(el =>
@@ -22,18 +33,15 @@ export class App extends Component {
     );
   };
 
-
   filterContactList = evt => {
     this.setState({ filter: evt.target.value });
   };
-
 
   deleteContact = id => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(el => el.id !== id),
     }));
   };
-
 
   onAddBtnClick = ({ name, number }) => {
     const contactObject = {
@@ -52,10 +60,8 @@ export class App extends Component {
         }));
   };
 
-  
   render() {
     const filteredArray = this.getFiltredArray();
-
     return (
       <div className="container">
         <h1>Phonebook</h1>
